@@ -9,9 +9,9 @@ import (
 
 const (
 	// ApacheCommonLog : {host} {user-identifier} {auth-user-id} [{datetime}] "{method} {request} HTTP/1.0" {response-code} {bytes}
-	ApacheCommonLog = "%s - %s %d [%s] \"%s %s\" %d %d"
+	ApacheCommonLog = "%s %s %d [%s] \"%s %s\" %d %d"
 	// ApacheCombinedLog : {host} {user-identifier} {auth-user-id} [{datetime}] "{method} {request} HTTP/1.0" {response-code} {bytes} "{referrer}" "{agent}"
-	ApacheCombinedLog = "%s - %s %d [%s] \"%s %s\" %d %d \"%s\" \"%s\""
+	ApacheCombinedLog = "%s %s %d [%s] \"%s %s\" %d %d \"%s\" \"%s\""
 	// ApacheErrorLog : [{timestamp}] [{module}:{severity}] [pid {pid}:tid {thread-id}] [client: %{client}] %{message}
 	ApacheErrorLog = "[%s] [%s:%s] [pid %d:tid %d] [client: %s] %s"
 	// RFC3164Log : <priority>{timestamp} {hostname} {application}[{pid}]: {message}
@@ -25,7 +25,7 @@ func NewApacheCommonLog(t time.Time) string {
 		gofakeit.IPv4Address(),
 		gofakeit.Username(),
 		gofakeit.Number(0, 1000),
-		t.Format(time.RFC3339),
+		t.Format(APACHE_LOG_TIME),
 		gofakeit.HTTPMethod(),
 		RandResourceURI(),
 		gofakeit.StatusCode(),
@@ -40,7 +40,7 @@ func NewApacheCombinedLog(t time.Time) string {
 		gofakeit.IPv4Address(),
 		gofakeit.Username(),
 		gofakeit.Number(1, 1000),
-		t.Format(time.RFC3339),
+		t.Format(APACHE_LOG_TIME),
 		gofakeit.HTTPMethod(),
 		RandResourceURI(),
 		gofakeit.StatusCode(),
@@ -54,7 +54,7 @@ func NewApacheCombinedLog(t time.Time) string {
 func NewApacheErrorLog(t time.Time) string {
 	return fmt.Sprintf(
 		ApacheErrorLog,
-		t.Format(time.RFC3339),
+		t.Format(APACHE_LOG_TIME),
 		gofakeit.Word(),
 		gofakeit.LogLevel("apache"),
 		gofakeit.Number(1, 10000),
